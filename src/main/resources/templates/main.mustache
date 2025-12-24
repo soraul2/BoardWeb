@@ -99,15 +99,22 @@
 <body>
 <header class="simple-header">
     <nav>
-        <a href="/main" style="color: var(--apple-blue);">Home</a>
+        {{#isLogin}}
+            <span>반갑습니다, <b>{{username}}</b>님!</span>
+            <a href="/myinfo">내 정보</a>
+            <a href="/logout">로그아웃</a>
+        {{/isLogin}}
+
+        {{^isLogin}}
+            <a href="/login">로그인</a>
+            <a href="/join">회원가입</a>
+        {{/isLogin}}
         <a href="/board/list">Board</a>
-        <a href="/myinfo">My Info</a>
-        <a href="/logout">Logout</a>
     </nav>
 </header>
 
 <div class="hero-section">
-    <h1 class="hero-title">{{#username}}{{username}}{{/username}} Welcome.</h1>
+    <h1 class="hero-title">{{#username}}{{username}}{{/username}}Welcome.</h1>
     <p class="hero-subtitle">원하는 서비스를 선택하세요.</p>
 
     <div class="card-container">
