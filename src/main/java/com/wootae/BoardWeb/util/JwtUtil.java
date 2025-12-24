@@ -1,4 +1,4 @@
-package com.wootae.diary.util;
+package com.wootae.BoardWeb.util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;

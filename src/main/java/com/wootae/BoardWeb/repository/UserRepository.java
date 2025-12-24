@@ -7,7 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
 
-    //같은 username 이 있는 경우
+    //[회원가입]
     boolean existsByUsername(String username);
+
+    //[로그인]
+    User findByUsername(String username);
 
 }

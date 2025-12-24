@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>홈</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Apple Style CSS (공통) */
+        :root {
+            --apple-bg: #f5f5f7;
+            --apple-blue: #0071e3;
+            --apple-text: #1d1d1f;
+        }
+
+        body {
+            background-color: var(--apple-bg);
+            font-family: -apple-system, sans-serif;
+            color: var(--apple-text);
+        }
+
+        .simple-header {
+            padding: 20px 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+
+        .simple-header a {
+            color: var(--apple-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .simple-header a:hover {
+            color: var(--apple-blue);
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #86868b;
+            margin-bottom: 50px;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-card {
+            background: white;
+            width: 300px;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #86868b;
+        }
+    </style>
+</head>
+<body>
+<header class="simple-header">
+    <nav>
+        <a href="/main" style="color: var(--apple-blue);">Home</a>
+        <a href="/board/list">Board</a>
+        <a href="/myinfo">My Info</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<div class="hero-section">
+    <h1 class="hero-title">{{#username}}{{username}}{{/username}} Welcome.</h1>
+    <p class="hero-subtitle">원하는 서비스를 선택하세요.</p>
+
+    <div class="card-container">
+        <a href="/board/list" class="nav-card">
+            <span class="card-icon">📝</span>
+            <span class="card-title">게시판</span>
+            <span class="card-desc">최신 글을 확인하고 소통하세요.</span>
+        </a>
+
+        <a href="/myinfo" class="nav-card">
+            <span class="card-icon">👤</span>
+            <span class="card-title">내 정보</span>
+            <span class="card-desc">계정 정보 및 설정을 관리하세요.</span>
+        </a>
+    </div>
+</div>
+</body>
+</html>
