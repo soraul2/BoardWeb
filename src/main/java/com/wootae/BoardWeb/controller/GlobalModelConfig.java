@@ -2,12 +2,15 @@ package com.wootae.BoardWeb.controller;
 
 import com.wootae.BoardWeb.dto.CustomUserDetails;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.security.Principal;
+import java.util.Collection;
+import java.util.Iterator;
 
 @ControllerAdvice
 public class GlobalModelConfig {
@@ -26,7 +29,13 @@ public class GlobalModelConfig {
 
                 //mustache 에서 쓸 변수명 등록
                 model.addAttribute("username",customUserDetails.getUsername());
-                model.addAttribute("role",customUserDetails.getAuthorities().toString());
+
+                Collection<? extends GrantedAuthority> collection = customUserDetails.getAuthorities();
+                Iterator<? extends GrantedAuthority> iterator = collection.iterator();
+                GrantedAuthority grantedAuthority = iterator.next();
+                String role = grantedAuthority.getAuthority();
+
+                model.addAttribute("role",role);
                 model.addAttribute("isLogin",true);
             }else{
                 model.addAttribute("isLogin",false);

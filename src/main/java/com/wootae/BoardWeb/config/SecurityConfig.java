@@ -40,7 +40,7 @@ public class SecurityConfig {
         http.httpBasic((auth) -> auth.disable());
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login", "/join","/main").permitAll()
+                .requestMatchers("/login", "/join","/main","/").permitAll()
                 .requestMatchers("/user/**").hasAnyRole("USER")
 
         );

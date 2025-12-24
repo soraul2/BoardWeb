@@ -101,7 +101,7 @@
     <nav>
         {{#isLogin}}
             <span>반갑습니다, <b>{{username}}</b>님!</span>
-            <a href="/myinfo">내 정보</a>
+            <a href="user/myinfo">내 정보</a>
             <a href="/logout">로그아웃</a>
         {{/isLogin}}
 
@@ -109,26 +109,33 @@
             <a href="/login">로그인</a>
             <a href="/join">회원가입</a>
         {{/isLogin}}
-        <a href="/board/list">Board</a>
+        <a href="board/list">Board</a>
     </nav>
 </header>
 
 <div class="hero-section">
-    <h1 class="hero-title">{{#username}}{{username}}{{/username}}Welcome.</h1>
+    <h1 class="hero-title">BoardWeb Welcome.</h1>
     <p class="hero-subtitle">원하는 서비스를 선택하세요.</p>
 
+
+
     <div class="card-container">
-        <a href="/board/list" class="nav-card">
+
+        {{#isLogin}}
+            <a href="user/myinfo" class="nav-card">
+                <span class="card-icon">👤</span>
+                <span class="card-title">내 정보</span>
+                <span class="card-desc">계정 정보 및 설정을 관리하세요.</span>
+            </a>
+        {{/isLogin}}
+
+        <a href="board/list" class="nav-card">
             <span class="card-icon">📝</span>
             <span class="card-title">게시판</span>
             <span class="card-desc">최신 글을 확인하고 소통하세요.</span>
         </a>
 
-        <a href="/myinfo" class="nav-card">
-            <span class="card-icon">👤</span>
-            <span class="card-title">내 정보</span>
-            <span class="card-desc">계정 정보 및 설정을 관리하세요.</span>
-        </a>
+
     </div>
 </div>
 </body>
