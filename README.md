@@ -1,0 +1,13 @@
+- 사용중인 소프트웨어 
+  - Spring boot 4.0.1
+  - Mysql
+  - JDK 21
+
+- 사용한 라이브러리
+  - Lombok
+  - SpringSecurity
+  - SpringWeb
+  - Mysql Driver
+  - Mustache
+  - JsonWebToken
+  - SpringJPA
