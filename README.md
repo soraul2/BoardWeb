@@ -5,7 +5,7 @@ PROJECT NAME : BoardWeb
 ### 💻 Environment
 - **Language**: Java 21 (JDK 21)
 - **Framework**: Spring Boot 3.4.1 (현재 최신 안정 버전 기준)
-- **Build Tool**: Gradle / Maven (사용하시는 것에 맞춰 하나만 남기세요)
+- **Build Tool**: Gradle
 - **Database**: MySQL
 
 ### 📚 Libraries & Dependencies
