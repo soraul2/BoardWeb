@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>글쓰기 - Community</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Apple Style CSS */
+        :root {
+            --apple-bg: #f5f5f7;
+            --apple-card: #ffffff;
+            --apple-text: #1d1d1f;
+            --apple-blue: #0071e3;
+            --apple-gray: #86868b;
+            --apple-border: #d2d2d7;
+        }
+        body {
+            background-color: var(--apple-bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--apple-text);
+        }
+
+        /* 헤더 */
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 15px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--apple-border);
+        }
+        header a {
+            color: var(--apple-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        header a:hover { color: var(--apple-blue); }
+
+        /* 글쓰기 폼 컨테이너 */
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .write-card {
+            background: var(--apple-card);
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .writer-info {
+            color: var(--apple-gray);
+            font-size: 14px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 입력 필드 스타일링 */
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--apple-gray);
+            margin-bottom: 8px;
+        }
+
+        .apple-input {
+            border: 1px solid var(--apple-border);
+            border-radius: 12px;
+            padding: 15px;
+            background-color: #fafafa;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .apple-input:focus {
+            background-color: white;
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+            outline: none;
+        }
+
+        textarea.apple-input {
+            min-height: 300px;
+            resize: none; /* 크기 조절 막기 */
+        }
+
+        /* 버튼 영역 */
+        .btn-area {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn-submit {
+            background-color: var(--apple-blue);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+        .btn-submit:hover { background-color: #0077ed; }
+
+        .btn-cancel {
+            background-color: #f5f5f7;
+            color: var(--apple-text);
+            padding: 12px 30px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+        .btn-cancel:hover { background-color: #e5e5e7; color: var(--apple-text); }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/board/list" style="color: var(--apple-blue);">Board</a>
+        {{#isLogin}}
+            <a href="/user/myinfo">My Info</a>
+            <a href="/logout">Logout</a>
+        {{/isLogin}}
+    </nav>
+</header>
+
+<div class="container">
+    <div class="write-card">
+        <h1 class="page-title">New Post</h1>
+
+        <div class="writer-info">
+            <span>Writing as</span>
+            <span style="color: var(--apple-text); font-weight: 600;">{{username}}</span>
+        </div>
+
+        <form action="/board/write" method="post">
+
+            <div class="mb-4">
+                <input type="text" name="title" class="form-control apple-input" placeholder="제목을 입력하세요" required>
+            </div>
+
+            <div class="mb-4">
+                <textarea name="content" class="form-control apple-input" placeholder="내용을 자유롭게 작성해주세요..." required></textarea>
+            </div>
+
+            <div class="btn-area">
+                <a href="/board/list" class="btn-cancel">취소</a>
+                <button type="submit" class="btn-submit">등록하기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

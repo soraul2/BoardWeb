@@ -40,9 +40,8 @@ public class SecurityConfig {
         http.httpBasic((auth) -> auth.disable());
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login", "/join","/main","/").permitAll()
-                .requestMatchers("/user/**").hasAnyRole("USER")
-
+                .requestMatchers("/board/list","/login", "/join","/main","/").permitAll()
+                .requestMatchers("/user/**","/board/write").hasAnyRole("USER")
         );
         http.addFilterBefore(new JwtFilter(jwtUtil),UsernamePasswordAuthenticationFilter.class);
         http.addFilterAt(new LoginFilter(jwtUtil,authenticationManager), UsernamePasswordAuthenticationFilter.class);

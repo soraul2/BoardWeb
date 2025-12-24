@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 - Community</title> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Apple Style CSS */
+        :root {
+            --apple-bg: #f5f5f7;
+            --apple-card: #ffffff;
+            --apple-text: #1d1d1f;
+            --apple-blue: #0071e3;
+            --apple-gray: #86868b;
+            --apple-border: #d2d2d7;
+        }
+        body {
+            background-color: var(--apple-bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--apple-text);
+        }
+
+        /* 헤더 (GlobalModelConfig 적용) */
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 15px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--apple-border);
+        }
+        header a {
+            color: var(--apple-text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        header a:hover { color: var(--apple-blue); }
+        .nav-active { color: var(--apple-blue) !important; font-weight: 600; }
+
+        /* 메인 컨테이너 */
+        .container {
+            max-width: 980px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        /* 타이틀 영역 */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .page-title {
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        /* 글쓰기 버튼 */
+        .btn-write {
+            background-color: var(--apple-blue);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .btn-write:hover { background-color: #0077ed; color: white; }
+
+        /* 게시판 테이블 (카드 스타일) */
+        .board-card {
+            background: var(--apple-card);
+            border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden; /* 모서리 둥글게 유지 */
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th {
+            background-color: #fafafa;
+            color: var(--apple-gray);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 15px;
+            color: var(--apple-text);
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        /* 행 호버 효과 (제목 클릭 유도) */
+        tbody tr { transition: background-color 0.2s; cursor: pointer; }
+        tbody tr:hover { background-color: #f9f9f9; }
+
+        .post-link { color: inherit; text-decoration: none; display: block; }
+
+        /* 데이터 없을 때 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 0;
+            color: var(--apple-gray);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/board/list" class="nav-active">Board</a>
+
+        {{#isLogin}}
+            <a href="/user/myinfo">My Info</a>
+            <span style="font-size: 12px; color: #86868b; margin-left: 10px;">{{username}}님</span>
+            <a href="/logout" style="color: #ff3b30;">Logout</a>
+        {{/isLogin}}
+
+        {{^isLogin}}
+            <a href="/login">Login</a>
+            <a href="/join">Join</a>
+        {{/isLogin}}
+    </nav>
+</header>
+
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Community</h1>
+
+        {{#isLogin}}
+            <a href="/board/write" class="btn-write">New Post +</a>
+        {{/isLogin}}
+    </div>
+
+    <div class="board-card">
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 10%;">NO</th>
+                <th style="width: 55%;">SUBJECT</th>
+                <th style="width: 15%;">WRITER</th>
+                <th style="width: 20%;">DATE</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#boardList}}
+                <tr onclick="location.href='/board/view/{{id}}'">
+                    <td>{{id}}</td>
+                    <td><span class="post-link">{{title}}</span></td>
+                    <td>{{writer}}</td>
+                    <td>{{date}}</td>
+                </tr>
+            {{/boardList}}
+
+            {{^boardList}}
+                <tr>
+                    <td colspan="4" class="empty-state">
+                        <span style="font-size: 24px; display: block; margin-bottom: 10px;">📭</span>
+                        등록된 게시글이 없습니다.
+                    </td>
+                </tr>
+            {{/boardList}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
