@@ -28,7 +28,7 @@ public class JoinController {
             joinService.joinProcess(joinDTO);
             return "login";
         } catch (IllegalArgumentException e) {
-            model.addAttribute("JoinErrorMessage", e.getMessage());
+            model.addAttribute("error", e.getMessage());
             return "join";
         }
     }

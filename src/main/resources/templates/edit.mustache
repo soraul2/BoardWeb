@@ -2,10 +2,10 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>글쓰기 - Community</title>
+    <title>글 수정 - Community</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Apple Style CSS */
+        /* Apple Style CSS (공통) */
         :root {
             --apple-bg: #f5f5f7;
             --apple-card: #ffffff;
@@ -14,7 +14,6 @@
             --apple-gray: #86868b;
             --apple-border: #d2d2d7;
         }
-
         body {
             background-color: var(--apple-bg);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -32,7 +31,6 @@
             z-index: 100;
             border-bottom: 1px solid var(--apple-border);
         }
-
         header a {
             color: var(--apple-text);
             text-decoration: none;
@@ -41,12 +39,9 @@
             font-weight: 500;
             transition: color 0.2s;
         }
+        header a:hover { color: var(--apple-blue); }
 
-        header a:hover {
-            color: var(--apple-blue);
-        }
-
-        /* 글쓰기 폼 컨테이너 */
+        /* 메인 컨테이너 */
         .container {
             max-width: 800px;
             margin: 60px auto;
@@ -75,14 +70,7 @@
             gap: 5px;
         }
 
-        /* 입력 필드 스타일링 */
-        .form-label {
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--apple-gray);
-            margin-bottom: 8px;
-        }
-
+        /* 입력 필드 */
         .apple-input {
             border: 1px solid var(--apple-border);
             border-radius: 12px;
@@ -90,18 +78,18 @@
             background-color: #fafafa;
             font-size: 16px;
             transition: all 0.2s;
+            width: 100%;
+            margin-bottom: 20px;
         }
-
         .apple-input:focus {
             background-color: white;
             border-color: var(--apple-blue);
             box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
             outline: none;
         }
-
         textarea.apple-input {
             min-height: 300px;
-            resize: none; /* 크기 조절 막기 */
+            resize: none;
         }
 
         /* 버튼 영역 */
@@ -109,7 +97,7 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 30px;
+            margin-top: 10px;
         }
 
         .btn-submit {
@@ -120,12 +108,10 @@
             border: none;
             font-weight: 600;
             font-size: 15px;
+            cursor: pointer;
             transition: background-color 0.2s;
         }
-
-        .btn-submit:hover {
-            background-color: #0077ed;
-        }
+        .btn-submit:hover { background-color: #0077ed; }
 
         .btn-cancel {
             background-color: #f5f5f7;
@@ -137,16 +123,21 @@
             font-size: 15px;
             transition: background-color 0.2s;
         }
-
-        .btn-cancel:hover {
-            background-color: #e5e5e7;
-            color: var(--apple-text);
-        }
+        .btn-cancel:hover { background-color: #e5e5e7; color: var(--apple-text); }
     </style>
 </head>
 <body>
 
-<header>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/board/list" style="color: var(--apple-blue);">Board</a>
+            {{#isLogin}}
+                <a href="/user/myinfo">My Info</a>
+                <a href="/logout">Logout</a>
+            {{/isLogin}}
+        </nav>
+    </header>
     {{#error}}
         <script>
             alert("{{error}}");
@@ -154,43 +145,29 @@
             history.replaceState({}, null, location.pathname);
         </script>
     {{/error}}
-    <nav>
-        <a href="/">Home</a>
-        <a href="/board/list" style="color: var(--apple-blue);">Board</a>
-        {{#isLogin}}
-            <a href="/user/myinfo">My Info</a>
-            <a href="/logout">Logout</a>
-        {{/isLogin}}
-    </nav>
-</header>
+    <div class="container">
+        <div class="write-card">
+            <h1 class="page-title">Edit Post</h1>
 
-<div class="container">
-    <div class="write-card">
-        <h1 class="page-title">New Post</h1>
+            <div class="writer-info">
+                <span>Writing as</span>
+                <span style="color: var(--apple-text); font-weight: 600;">{{board.nickname}}</span>
+            </div>
 
-        <div class="writer-info">
-            <span>Writing as</span>
-            <span style="color: var(--apple-text); font-weight: 600;">{{username}}</span>
+            <form action="/board/edit" method="post">
+                <input type="hidden" name="num" value="{{board.num}}">
+
+                <input type="text" name="title" class="apple-input" placeholder="제목을 입력하세요" value="{{board.title}}" required>
+
+                <textarea name="content" class="apple-input" placeholder="내용을 작성해주세요..." required>{{board.content}}</textarea>
+
+                <div class="btn-area">
+                    <a href="/board/detail/{{board.num}}" class="btn-cancel">취소</a>
+                    <button type="submit" class="btn-submit">수정 완료</button>
+                </div>
+            </form>
         </div>
-
-        <form action="/board/write" method="post">
-
-            <div class="mb-4">
-                <input type="text" name="title" class="form-control apple-input" placeholder="제목을 입력하세요" required>
-            </div>
-
-            <div class="mb-4">
-                <textarea name="content" class="form-control apple-input" placeholder="내용을 자유롭게 작성해주세요..."
-                          required></textarea>
-            </div>
-
-            <div class="btn-area">
-                <a href="/board/list" class="btn-cancel">취소</a>
-                <button type="submit" class="btn-submit">등록하기</button>
-            </div>
-        </form>
     </div>
-</div>
 
 </body>
 </html>

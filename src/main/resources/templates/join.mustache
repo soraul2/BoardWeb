@@ -119,11 +119,11 @@
         <h1 class="auth-title">계정 생성</h1>
         <p class="auth-subtitle">서비스 이용을 위해 계정을 만들어주세요.</p>
 
-        {{#JoinErrorMessage}}
+        {{#error}}
             <div class="alert alert-danger text-center p-2 mb-4" style="font-size: 14px; border-radius: 10px;">
-                {{JoinErrorMessage}}
+                {{error}}
             </div>
-        {{/JoinErrorMessage}}
+        {{/error}}
 
         <form action="/join" method="post">
 

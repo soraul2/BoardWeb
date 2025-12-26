@@ -201,7 +201,13 @@
             {{/isLogin}}
         </div>
     </div>
-
+    {{#error}}
+        <script>
+            alert("{{error}}");
+            // 알림창 닫으면 깔끔하게 URL에서 에러 파라미터 지우기 (선택사항)
+            history.replaceState({}, null, location.pathname);
+        </script>
+    {{/error}}
     <div class="board-card">
         <table>
             <thead>
@@ -214,7 +220,7 @@
             </thead>
             <tbody>
             {{#boardList.content}}
-                <tr onclick="location.href='/board/view/{{num}}'">
+                <tr onclick="location.href='/board/detail/{{num}}'">
                     <td>{{num}}</td>
                     <td><span class="post-link">{{title}}</span></td>
                     <td>{{nickname}}</td> <td>{{date}}</td>

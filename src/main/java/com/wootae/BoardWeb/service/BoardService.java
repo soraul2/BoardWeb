@@ -22,6 +22,80 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
+    @Transactional
+    public void editProcess(BoardDTO boardDTO,String username , int num){
+        Board board = boardRepository.findById(num)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        if(board.getUser().getUsername().equals(username)){
+            board.setTitle(boardDTO.getTitle());
+            board.setContent(boardDTO.getContent());
+        }else{
+            throw new IllegalArgumentException("수정할 권한이 없습니다.");
+        }
+        return;
+    }
+
+    //게시글 업데이트 이동 [권한] 해당 게시글 만든 유저
+    @Transactional(readOnly = true)
+    public BoardDTO edtiBoardPage(String username , int num){
+        Board board = boardRepository.findById(num)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        BoardDTO boardDTO = new BoardDTO();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        if(board.getUser().getUsername().equals(username)){
+            boardDTO.setNum(board.getNum());
+            boardDTO.setContent(board.getContent());
+            boardDTO.setDate(dtf.format(board.getDate()));
+            boardDTO.setCount(board.getCount());
+            boardDTO.setNickname(board.getUser().getNickname());
+            boardDTO.setTitle(board.getTitle());
+        }else{
+            throw new IllegalArgumentException("수정할 권한이 없습니다.");
+        }
+        return boardDTO;
+    }
+
+    //게시글 삭제 [권한] 게시글을 작성한 USER
+    @Transactional
+    public void deleteBoard(int num,String username,String role){
+        Board board = boardRepository.findById(num)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        if(board.getUser().getUsername().equals(username) || role.equals("ROLE_ADMIN")){
+            boardRepository.delete(board);
+        }else{
+            throw new IllegalArgumentException("삭제할 권한이 없습니다.");
+        }
+    }
+
+    //게시글 상세 보기
+    @Transactional
+    public BoardDTO getBoardPage(int num){
+        Board board = boardRepository.findByNum(num);
+
+        //자동으로 +1 저장 해줌
+        board.setCount(board.getCount()+1);
+
+        if(board == null){
+            throw new IllegalArgumentException("존재하지 않는 게시글 입니다.");
+        }
+
+        BoardDTO boardDTO = new BoardDTO();
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        boardDTO.setNum(board.getNum());
+        boardDTO.setContent(board.getContent());
+        boardDTO.setDate(dtf.format(board.getDate()));
+        boardDTO.setCount(board.getCount());
+        boardDTO.setNickname(board.getUser().getNickname());
+        boardDTO.setTitle(board.getTitle());
+
+        return boardDTO;
+    }
+
     //게시글 리스트 출력
     @Transactional(readOnly = true)
     public Page<BoardDTO> getBoardListProcess(int page,String keyword){

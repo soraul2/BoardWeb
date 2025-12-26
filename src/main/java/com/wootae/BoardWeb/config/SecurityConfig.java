@@ -40,12 +40,20 @@ public class SecurityConfig {
         http.httpBasic((auth) -> auth.disable());
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/board/list","/login", "/join","/main","/").permitAll()
-                .requestMatchers("/user/**","/board/write").hasAnyRole("USER")
+                // 1. [완전 허용] 누구나 들어올 수 있는 곳 (순서가 제일 중요합니다! ⭐)
+                // 게시판 리스트, 상세 보기(detail/숫자)는 허용
+                .requestMatchers("/", "/login", "/join", "/main", "/board/list", "/board/detail/**").permitAll()
+
+                // 2. [인증 필요] 위에서 허용된 것들을 *제외한* 나머지 /board 하위 경로는 전부 로그인 필요
+                // (write, edit, update, delete, like 등등... 일일이 안 적어도 됨!)
+                .requestMatchers("/board/**", "/user/**").hasAnyRole("USER")
+
+                // 3. [나머지] 그 외 모든 페이지는 로그인해야 접근 가능
+                .anyRequest().authenticated()
         );
-        http.addFilterBefore(new JwtFilter(jwtUtil),UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAt(new LoginFilter(jwtUtil,authenticationManager), UsernamePasswordAuthenticationFilter.class);
-        http.logout((logout)->logout
+        http.addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new LoginFilter(jwtUtil, authenticationManager), UsernamePasswordAuthenticationFilter.class);
+        http.logout((logout) -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .deleteCookies("Authorization")

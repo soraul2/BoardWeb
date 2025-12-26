@@ -3,6 +3,7 @@ package com.wootae.BoardWeb.filter;
 import com.wootae.BoardWeb.dto.CustomUserDetails;
 import com.wootae.BoardWeb.entity.User;
 import com.wootae.BoardWeb.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -27,6 +28,14 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        // 1. 필터를 타지 말아야 할 경로들 (화이트리스트)
+        if (path.equals("/login") || path.equals("/join") || path.startsWith("/css/")) {
+            filterChain.doFilter(request, response); // 검사 안 하고 다음 단계로 넘김
+            return;
+        }
+
         String token = null;
 
         //cookie 에서 Authorization 이 잘 있는지 , token의 유효기간이 유효한지 체크
@@ -46,6 +55,7 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
 
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
