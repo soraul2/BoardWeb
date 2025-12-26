@@ -34,9 +34,11 @@ public class GlobalModelConfig {
                 Iterator<? extends GrantedAuthority> iterator = collection.iterator();
                 GrantedAuthority grantedAuthority = iterator.next();
                 String role = grantedAuthority.getAuthority();
+                String nickname = customUserDetails.getNickname();
 
                 model.addAttribute("role",role);
                 model.addAttribute("isLogin",true);
+                model.addAttribute("nickname",nickname);
             }else{
                 model.addAttribute("isLogin",false);
             }
