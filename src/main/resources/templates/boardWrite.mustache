@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>글쓰기 - Community</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+
     <style>
         /* Apple Style CSS */
         :root {
@@ -48,7 +50,7 @@
 
         /* 글쓰기 폼 컨테이너 */
         .container {
-            max-width: 800px;
+            max-width: 900px; /* 에디터가 넓어서 조금 키움 */
             margin: 60px auto;
             padding: 0 20px;
         }
@@ -75,14 +77,6 @@
             gap: 5px;
         }
 
-        /* 입력 필드 스타일링 */
-        .form-label {
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--apple-gray);
-            margin-bottom: 8px;
-        }
-
         .apple-input {
             border: 1px solid var(--apple-border);
             border-radius: 12px;
@@ -97,11 +91,6 @@
             border-color: var(--apple-blue);
             box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
             outline: none;
-        }
-
-        textarea.apple-input {
-            min-height: 300px;
-            resize: none; /* 크기 조절 막기 */
         }
 
         /* 버튼 영역 */
@@ -142,6 +131,12 @@
             background-color: #e5e5e7;
             color: var(--apple-text);
         }
+
+        /* 에디터 커스텀 스타일 (선택사항) */
+        .toastui-editor-defaultUI {
+            border-radius: 12px;
+            border: 1px solid var(--apple-border) !important;
+        }
     </style>
 </head>
 <body>
@@ -150,7 +145,6 @@
     {{#error}}
         <script>
             alert("{{error}}");
-            // 알림창 닫으면 깔끔하게 URL에서 에러 파라미터 지우기 (선택사항)
             history.replaceState({}, null, location.pathname);
         </script>
     {{/error}}
@@ -173,15 +167,16 @@
             <span style="color: var(--apple-text); font-weight: 600;">{{username}}</span>
         </div>
 
-        <form action="/board/write" method="post">
+        <form action="/board/write" method="post" id="writeForm">
 
             <div class="mb-4">
                 <input type="text" name="title" class="form-control apple-input" placeholder="제목을 입력하세요" required>
             </div>
 
             <div class="mb-4">
-                <textarea name="content" class="form-control apple-input" placeholder="내용을 자유롭게 작성해주세요..."
-                          required></textarea>
+                <input type="hidden" name="content" id="hiddenContent">
+
+                <div id="editor"></div>
             </div>
 
             <div class="btn-area">
@@ -191,6 +186,35 @@
         </form>
     </div>
 </div>
+
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script>
+    // 에디터 생성
+    const editor = new toastui.Editor({
+        el: document.querySelector('#editor'),
+        height: '500px',                        // 에디터 높이
+        initialEditType: 'markdown',            // 기본 모드 (markdown / wysiwyg)
+        previewStyle: 'vertical',               // 미리보기 스타일 (vertical / tab)
+        placeholder: '내용을 자유롭게 작성해주세요...'
+    });
+
+    // 폼 제출 시 에디터 내용을 hidden input에 복사
+    document.querySelector('#writeForm').addEventListener('submit', function(e) {
+        const content = editor.getMarkdown(); // 마크다운 문법으로 가져오기
+
+        // 내용 검사
+        if(content.trim() === '') {
+            e.preventDefault(); // 전송 막기
+            alert('내용을 입력해주세요.');
+            return;
+        }
+
+        // 숨겨진 input에 값 넣기
+        document.querySelector('#hiddenContent').value = content;
+
+        // (폼은 자동으로 전송됨)
+    });
+</script>
 
 </body>
 </html>

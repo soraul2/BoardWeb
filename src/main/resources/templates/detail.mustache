@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>{{board.title}} - Community</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+
     <style>
         /* Apple Style CSS (공통) */
         :root {
@@ -44,7 +47,7 @@
 
         /* 메인 컨테이너 */
         .container {
-            max-width: 800px;
+            max-width: 900px; /* 뷰어라 조금 넓게 */
             margin: 60px auto;
             padding: 0 20px;
         }
@@ -68,7 +71,7 @@
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 15px;
-            word-break: break-all; /* 긴 제목 줄바꿈 */
+            word-break: break-all;
         }
         .post-meta {
             display: flex;
@@ -79,14 +82,16 @@
         .meta-left span { margin-right: 15px; }
         .meta-label { font-weight: 600; margin-right: 5px; }
 
-        /* 게시글 본문 */
-        .post-content {
-            font-size: 17px;
-            line-height: 1.7; /* 줄간격 넓게 */
+        /* 게시글 본문 (뷰어 영역) */
+        #viewer {
             min-height: 200px;
-            white-space: pre-wrap; /* 줄바꿈, 띄어쓰기 그대로 표현 */
             margin-bottom: 50px;
-            color: #333;
+            font-size: 16px; /* 뷰어 폰트 크기 조정 */
+        }
+
+        /* Toast UI 뷰어 내부 스타일 조정 (선택사항) */
+        .toastui-editor-contents {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         }
 
         /* 버튼 영역 */
@@ -148,10 +153,10 @@
         {{#error}}
             <script>
                 alert("{{error}}");
-                // 알림창 닫으면 깔끔하게 URL에서 에러 파라미터 지우기 (선택사항)
                 history.replaceState({}, null, location.pathname);
             </script>
         {{/error}}
+
         {{#board}}
             <div class="post-header">
                 <h1 class="post-title">{{title}}</h1>
@@ -165,7 +170,10 @@
                 </div>
             </div>
 
-            <div class="post-content">{{content}}</div>
+            <div id="db-content" style="display:none;">{{content}}</div>
+
+            <div id="viewer"></div>
+
         {{/board}}
 
         <div class="btn-area">
@@ -184,6 +192,19 @@
 
     </div>
 </div>
+
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script>
+    // 1. 숨겨둔 DB의 원본 마크다운 내용을 가져옴
+    const content = document.querySelector('#db-content').innerText;
+
+    // 2. 뷰어 실행 (HTML로 예쁘게 변환해서 보여줌)
+    const viewer = toastui.Editor.factory({
+        el: document.querySelector('#viewer'),
+        viewer: true,
+        initialValue: content
+    });
+</script>
 
 </body>
 </html>

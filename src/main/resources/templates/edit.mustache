@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>글 수정 - Community</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+
     <style>
         /* Apple Style CSS (공통) */
         :root {
@@ -43,7 +45,7 @@
 
         /* 메인 컨테이너 */
         .container {
-            max-width: 800px;
+            max-width: 900px; /* 에디터를 위해 넓게 조정 */
             margin: 60px auto;
             padding: 0 20px;
         }
@@ -87,17 +89,13 @@
             box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
             outline: none;
         }
-        textarea.apple-input {
-            min-height: 300px;
-            resize: none;
-        }
 
         /* 버튼 영역 */
         .btn-area {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 30px; /* 간격 조정 */
         }
 
         .btn-submit {
@@ -124,50 +122,88 @@
             transition: background-color 0.2s;
         }
         .btn-cancel:hover { background-color: #e5e5e7; color: var(--apple-text); }
+
+        /* 에디터 스타일 보정 */
+        .toastui-editor-defaultUI {
+            border-radius: 12px;
+            border: 1px solid var(--apple-border) !important;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/board/list" style="color: var(--apple-blue);">Board</a>
-            {{#isLogin}}
-                <a href="/user/myinfo">My Info</a>
-                <a href="/logout">Logout</a>
-            {{/isLogin}}
-        </nav>
-    </header>
-    {{#error}}
-        <script>
-            alert("{{error}}");
-            // 알림창 닫으면 깔끔하게 URL에서 에러 파라미터 지우기 (선택사항)
-            history.replaceState({}, null, location.pathname);
-        </script>
-    {{/error}}
-    <div class="container">
-        <div class="write-card">
-            <h1 class="page-title">Edit Post</h1>
+<header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/board/list" style="color: var(--apple-blue);">Board</a>
+        {{#isLogin}}
+            <a href="/user/myinfo">My Info</a>
+            <a href="/logout">Logout</a>
+        {{/isLogin}}
+    </nav>
+</header>
+{{#error}}
+    <script>
+        alert("{{error}}");
+        history.replaceState({}, null, location.pathname);
+    </script>
+{{/error}}
 
-            <div class="writer-info">
-                <span>Writing as</span>
-                <span style="color: var(--apple-text); font-weight: 600;">{{board.nickname}}</span>
-            </div>
+<div class="container">
+    <div class="write-card">
+        <h1 class="page-title">Edit Post</h1>
 
-            <form action="/board/edit" method="post">
-                <input type="hidden" name="num" value="{{board.num}}">
-
-                <input type="text" name="title" class="apple-input" placeholder="제목을 입력하세요" value="{{board.title}}" required>
-
-                <textarea name="content" class="apple-input" placeholder="내용을 작성해주세요..." required>{{board.content}}</textarea>
-
-                <div class="btn-area">
-                    <a href="/board/detail/{{board.num}}" class="btn-cancel">취소</a>
-                    <button type="submit" class="btn-submit">수정 완료</button>
-                </div>
-            </form>
+        <div class="writer-info">
+            <span>Writing as</span>
+            <span style="color: var(--apple-text); font-weight: 600;">{{board.nickname}}</span>
         </div>
+
+        <form action="/board/edit" method="post" id="editForm">
+            <input type="hidden" name="num" value="{{board.num}}">
+
+            <input type="text" name="title" class="apple-input" placeholder="제목을 입력하세요" value="{{board.title}}" required>
+
+            <input type="hidden" name="content" id="hiddenContent">
+
+            <div id="originalContent" style="display:none;">{{board.content}}</div>
+
+            <div id="editor"></div>
+
+            <div class="btn-area">
+                <a href="/board/detail/{{board.num}}" class="btn-cancel">취소</a>
+                <button type="submit" class="btn-submit">수정 완료</button>
+            </div>
+        </form>
     </div>
+</div>
+
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script>
+    // (1) 숨겨둔 div에서 기존 글 내용을 가져옵니다.
+    const originalText = document.querySelector('#originalContent').innerText;
+
+    // (2) 에디터를 생성하면서 initialValue에 기존 글을 넣어줍니다.
+    const editor = new toastui.Editor({
+        el: document.querySelector('#editor'),
+        height: '500px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        initialValue: originalText // ★ 핵심: 기존 내용 채워넣기
+    });
+
+    // (3) 수정 완료 버튼 누르면 에디터 내용을 hidden input에 담아서 보냄
+    document.querySelector('#editForm').addEventListener('submit', function(e) {
+        const content = editor.getMarkdown();
+
+        if(content.trim() === '') {
+            e.preventDefault();
+            alert('내용을 입력해주세요.');
+            return;
+        }
+
+        document.querySelector('#hiddenContent').value = content;
+    });
+</script>
 
 </body>
 </html>
